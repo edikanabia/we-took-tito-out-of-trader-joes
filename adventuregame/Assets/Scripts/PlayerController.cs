@@ -46,6 +46,18 @@ public class PlayerController : MonoBehaviour
         _movement.x = Input.GetAxisRaw("Horizontal");
         _movement.y = Input.GetAxisRaw("Vertical");
 
+        if (!gameManager.gameEnd)
+        {
+            if (gameManager.groceries >= 3)
+            {
+                isReadyToCheckout = true;
+            }
+            else
+            {
+                isReadyToCheckout = false;
+            }
+        }
+
     }
 
     //updates at time intervals 
@@ -88,20 +100,15 @@ public class PlayerController : MonoBehaviour
                     playerAnimator.SetInteger("direction", 3);
                 }
             }
-
-            _previousPosition = playerRB.position;
-
-
-            if (gameManager.groceries >= 3)
-            {
-                isReadyToCheckout = true;
-            }
-            else
-            {
-                isReadyToCheckout = false;
-            }
+            
         }
-        
+
+        else
+        {
+            playerAnimator.SetBool("moving", false);
+        }
+
+        _previousPosition = playerRB.position;
     }
 
 

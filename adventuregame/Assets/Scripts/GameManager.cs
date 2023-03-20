@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     //UI Management
     //TMP_Text shoppingList;
     public TMP_Text dialogue;
+    public string currentText;
 
     //lists
     [SerializeField] List<GameObject> slots;

@@ -8,6 +8,9 @@ public class SpeakerScript : MonoBehaviour
     public int lineNumber = 0;
 
     public bool firstTimeSpeaking = true;
+
+    public Sprite portrait;
+
     GameManager gameManager;
     PlayerController tito;
 
@@ -23,6 +26,10 @@ public class SpeakerScript : MonoBehaviour
         
     }
 
+    private void FixedUpdate()
+    {
+        
+    }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
