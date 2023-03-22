@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour
     //int treats = 0;
     //public int itemsCount = 0;
 
-    GameManager gameManager;
+    public GameManager gameManager;
 
 
     //can he finish the game?!?!?
@@ -36,7 +36,7 @@ public class PlayerController : MonoBehaviour
     {
         _previousPosition = playerRB.position;
         //dialogue.enabled = false;
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        //gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         
     }
 
@@ -65,7 +65,7 @@ public class PlayerController : MonoBehaviour
     //so as to not tie things to framerate).
     private void FixedUpdate()
     {
-        if (gameManager.gameEnd == false)
+        if (!gameManager.gameEnd)
         {
             // this handles all movement without using inputs/if statements. thanks merry!
             playerRB.MovePosition(playerRB.position + _movement * playerSpeed);
@@ -100,7 +100,9 @@ public class PlayerController : MonoBehaviour
                     playerAnimator.SetInteger("direction", 3);
                 }
             }
-            
+
+
+
         }
 
         else
@@ -148,45 +150,20 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Speaker"))
         {
-            SpeakerScript speaker = collision.gameObject.GetComponent<SpeakerScript>();
-
-            if (!isReadyToCheckout)
+            if (gameManager.spoken == false)
             {
-                if (!speaker.firstTimeSpeaking)
-                {
-                    if (gameManager.itemsCount == 0)
-                    {
-                        speaker.lineNumber = 1;
-                    }
-                    else if (gameManager.itemsCount > 0 && gameManager.groceries < 3)
-                    {
-                        speaker.lineNumber = 2;
-                    }
-                }
-            }
-            else
-            {
-                if (collision.gameObject.name == "Oliver")
-                {
-                    speaker.lineNumber = 3;
-                    gameManager.gameEnd = true;
-                }
-                else if (collision.gameObject.name == "Terry")
-                {
-                    speaker.lineNumber = 3;
-                }
+                gameManager.SayDialogue();
+                
             }
             
 
-            gameManager.dialogue.enabled = true;
-            gameManager.dialogue.text = speaker.speakerLines[speaker.lineNumber];
         }
         
     }
 
     private void OnCollisionExit2D(Collision2D collision)
-    {        
-        gameManager.dialogue.enabled = false;
+    {
+        gameManager.spoken = false;
     }
 
 

@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using Unity.VisualScripting;
 
 public class GameManager : MonoBehaviour
 {
@@ -15,10 +16,20 @@ public class GameManager : MonoBehaviour
     public int groceries = 0;
     public int treats = 0;
 
-    //UI Management
-    //TMP_Text shoppingList;
+    //advancing dialogue
     public TMP_Text dialogue;
+    public TMP_Text nametag;
     public string currentText;
+    Image textbox;
+    Image namebox;
+    public Image portrait;
+    public GameObject dialogueBoxObj;
+    public bool speaking; //is speaking currently, deactivates on textbox finish
+    public bool spoken; //has already spoken, deactivates on collision exits
+
+    public TextAsset lines;
+
+    public KeyCode advanceText;
 
     //lists
     [SerializeField] List<GameObject> slots;
@@ -61,7 +72,8 @@ public class GameManager : MonoBehaviour
         groundItems.AddRange(GameObject.FindGameObjectsWithTag("Grocery"));
         groundItems.AddRange(GameObject.FindGameObjectsWithTag("Treat"));
 
-        dialogue.enabled = false;
+        
+        dialogueBoxObj.SetActive(false);
     }
 
     // Update is called once per frame
@@ -75,6 +87,7 @@ public class GameManager : MonoBehaviour
             }
         }
  
+        
     }
 
     public void ListItem()
@@ -116,9 +129,9 @@ public class GameManager : MonoBehaviour
 
         //find gameobject by name and reactivate
 
-        if (itemIndex != 3) //"3" is max inventory - 1
+        if (itemIndex != maxInventory - 1) //"3" is max inventory - 1
         {
-            while (nextIndex < 4 && slotImages[nextIndex] != null)
+            while (nextIndex < maxInventory && slotImages[nextIndex] != null)
             {
                 slotImages[nextIndex - 1].sprite = slotImages[nextIndex].sprite; //UI elements shift
                 itemSlots[nextIndex - 1].itemName = itemSlots[nextIndex].itemName; //name shifts slots
@@ -141,4 +154,29 @@ public class GameManager : MonoBehaviour
         itemsCount--;
 
     }
+
+    public void SayDialogue()
+    {
+        speaking = true;
+        int currentLine = 0;
+        string[] dialogueLines;
+        dialogueLines = lines.text.Split(" /n", System.StringSplitOptions.None);
+        dialogue.text = dialogueLines[currentLine];
+        dialogueBoxObj.SetActive(true); //activates the dialogue box
+
+        //while (currentLine < dialogueLines.Length)
+        //{
+        //    if (Input.GetKeyDown(advanceText))
+        //    {
+        //        currentLine++;
+        //    }
+        //}
+
+        //speaking = false;
+        //spoken = true;
+
+
+
+    }
+
 }

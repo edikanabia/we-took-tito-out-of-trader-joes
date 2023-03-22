@@ -9,7 +9,8 @@ public class SpeakerScript : MonoBehaviour
 
     public bool firstTimeSpeaking = true;
 
-    public Sprite portrait;
+    public Sprite speakerPortrait;
+    public string speakerName;
 
     GameManager gameManager;
     PlayerController tito;
