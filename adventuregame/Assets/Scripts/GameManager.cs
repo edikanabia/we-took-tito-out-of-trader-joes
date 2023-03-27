@@ -4,7 +4,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using Unity.VisualScripting;
+using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -27,7 +27,11 @@ public class GameManager : MonoBehaviour
     public bool speaking; //is speaking currently, deactivates on textbox finish
     public bool spoken; //has already spoken, deactivates on collision exits
 
-    public TextAsset lines;
+    List<string> nameList = new List<string>();
+    List<string> linesList = new List<string>();
+
+    public int currentLine = 0;
+
 
     public KeyCode advanceText;
 
@@ -84,6 +88,45 @@ public class GameManager : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.R))
             {
                 SceneManager.LoadScene(0);
+            }
+        }
+        else
+        {
+
+            if (speaking)
+            {
+                nametag.text = nameList[currentLine];
+                dialogue.text = linesList[currentLine];
+                if(GameObject.Find(nametag.text).GetComponent<SpeakerScript>().speakerPortrait == null)
+                {
+                    portrait.sprite = null;
+                }
+                else
+                {
+                    portrait.sprite = GameObject.Find(nametag.text).GetComponent<SpeakerScript>().speakerPortrait;
+                }
+                
+                if (Input.GetKeyDown(advanceText))
+                {
+                    if (currentLine < nameList.Count-1 || currentLine < linesList.Count-1)
+                    {
+                        currentLine++;
+                    }
+                    else
+                    {
+                        speaking = false;
+                        dialogueBoxObj.SetActive(false);
+                        nametag.text = null;
+                        dialogue.text = null;
+                        currentLine = 0;
+                        nameList.RemoveRange(0, nameList.Count);
+                        linesList.RemoveRange(0, linesList.Count);
+                    }
+                }
+            }
+            else
+            {
+                
             }
         }
  
@@ -155,28 +198,24 @@ public class GameManager : MonoBehaviour
 
     }
 
-    public void SayDialogue()
+    public void DialogueBox(string scenario)
     {
-        speaking = true;
-        int currentLine = 0;
-        string[] dialogueLines;
-        dialogueLines = lines.text.Split(" /n", System.StringSplitOptions.None);
-        dialogue.text = dialogueLines[currentLine];
-        dialogueBoxObj.SetActive(true); //activates the dialogue box
+        dialogueBoxObj.SetActive(true);
+        TextAsset scenarioText = Resources.Load(scenario) as TextAsset; //loads in csv file
 
-        //while (currentLine < dialogueLines.Length)
-        //{
-        //    if (Input.GetKeyDown(advanceText))
-        //    {
-        //        currentLine++;
-        //    }
-        //}
+        string[] allLines = scenarioText.text.Split("\n"); //splits line by line into an array of strings
 
-        //speaking = false;
-        //spoken = true;
+        foreach(string line in allLines)
+        {
+            string[] splitHolder = line.Split('|');
+            nameList.Add(splitHolder[0]);
+            linesList.Add(splitHolder[splitHolder.Length - 1]);
 
+        }
 
+        speaking = true;        
 
     }
+    
 
 }

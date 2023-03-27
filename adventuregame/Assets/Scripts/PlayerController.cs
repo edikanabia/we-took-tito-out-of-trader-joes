@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-
+using UnityEngine.Experimental.GlobalIllumination;
 
 public class PlayerController : MonoBehaviour
 {
@@ -150,20 +150,17 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Speaker"))
         {
-            if (gameManager.spoken == false)
-            {
-                gameManager.SayDialogue();
-                
-            }
-            
 
+            string speakername = "dialoguetest";
+            gameManager.speaking = true;
+            gameManager.DialogueBox(speakername);
         }
         
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        gameManager.spoken = false;
+        gameManager.dialogueBoxObj.SetActive(false);
     }
 
 

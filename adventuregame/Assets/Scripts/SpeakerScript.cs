@@ -11,6 +11,7 @@ public class SpeakerScript : MonoBehaviour
 
     public Sprite speakerPortrait;
     public string speakerName;
+    public int scenarioNumber;
 
     GameManager gameManager;
     PlayerController tito;
@@ -24,7 +25,12 @@ public class SpeakerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        //scenario 0 - beginning of the game
+        //scenario 1 no items
+        //scenario 2 wrong items
+        //scenario 3 right items
+
+
     }
 
     private void FixedUpdate()
@@ -37,7 +43,7 @@ public class SpeakerScript : MonoBehaviour
         if (firstTimeSpeaking)
         {
             firstTimeSpeaking = false;
-            lineNumber = 1;
+            
         }
     }
 }

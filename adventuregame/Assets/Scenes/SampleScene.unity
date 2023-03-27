@@ -2549,14 +2549,13 @@ MonoBehaviour:
   itemsCount: 0
   groceries: 0
   treats: 0
-  dialogue: {fileID: 0}
-  nametag: {fileID: 0}
+  dialogue: {fileID: 966367445}
+  nametag: {fileID: 314467432}
   currentText: 
   portrait: {fileID: 0}
   dialogueBoxObj: {fileID: 949199643}
   speaking: 0
   spoken: 0
-  lines: {fileID: 4900000, guid: 5a408bb66370fd141b27fa2dee1c54d1, type: 3}
   advanceText: 120
   slots: []
   groundItems: []
@@ -2734,7 +2733,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -0.000045776, y: 102.08}
+  m_AnchoredPosition: {x: 0, y: 121}
   m_SizeDelta: {x: 800, y: 204.17}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &966367443
