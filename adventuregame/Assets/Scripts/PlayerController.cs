@@ -43,12 +43,24 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        _movement.x = Input.GetAxisRaw("Horizontal");
-        _movement.y = Input.GetAxisRaw("Vertical");
+        
+        
 
         if (!gameManager.gameEnd)
         {
-            if (gameManager.groceries >= 3)
+            if (gameManager.speaking)
+            {
+                _movement.x = 0;
+                _movement.y = 0;
+                playerRB.MovePosition(transform.position);
+            }
+            else
+            {
+                _movement.x = Input.GetAxisRaw("Horizontal");
+                _movement.y = Input.GetAxisRaw("Vertical");
+            }
+
+            if (gameManager.groceries >= gameManager.groceryThreshold)
             {
                 isReadyToCheckout = true;
             }
@@ -116,33 +128,43 @@ public class PlayerController : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        //checks to see if Tito has enough space in his inventory
-        if (gameManager.titoItems.Count < gameManager.maxInventory)
+
+        if (collision.CompareTag("Grocery") || collision.CompareTag("Treat"))
         {
-            if (collision.CompareTag("Grocery"))
+            //checks to see if Tito has enough space in his inventory
+            if (gameManager.titoItems.Count < gameManager.maxInventory)
             {
-                gameManager.groceries++;
+                if (collision.CompareTag("Grocery"))
+                {
+                    gameManager.groceries++;
+                }
+                else if (collision.CompareTag("Treat"))
+                {
+                    gameManager.treats++;
+                }
+
+                gameManager.titoItems.Add(collision.name); //adds the name of the item to inventory
+
+                //adding the image to the UI
+                SpriteRenderer currentSprite = collision.gameObject.GetComponent<SpriteRenderer>(); //gets sprite from collected item
+
+
+                gameManager.slotImages[gameManager.itemsCount].sprite = currentSprite.sprite; //sets image sprite to currentsprite
+                gameManager.ListItem(); //enables icon
+
+                gameManager.itemsCount++;
+
+                collision.gameObject.SetActive(false); //deactivates gameobject
+                                                       //Destroy(collision.gameObject); //makes sure you can't collect it twice, destroys object
+
             }
-            else if (collision.CompareTag("Treat"))
-            {
-                gameManager.treats++;
-            }
+        }
 
-            gameManager.titoItems.Add(collision.name); //adds the name of the item to inventory
-
-            //adding the image to the UI
-            SpriteRenderer currentSprite = collision.gameObject.GetComponent<SpriteRenderer>(); //gets sprite from collected item
-
-
-            gameManager.slotImages[gameManager.itemsCount].sprite = currentSprite.sprite; //sets image sprite to currentsprite
-            gameManager.ListItem(); //enables icon
-
-            gameManager.itemsCount++;
-
-            collision.gameObject.SetActive(false); //deactivates gameobject
-            //Destroy(collision.gameObject); //makes sure you can't collect it twice, destroys object
+        if (isReadyToCheckout)
+        {
 
         }
+        
     }
 
 
@@ -151,7 +173,7 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Speaker"))
         {
 
-            string speakername = "dialoguetest";
+            string speakername = "rosetest";
             gameManager.speaking = true;
             gameManager.DialogueBox(speakername);
         }

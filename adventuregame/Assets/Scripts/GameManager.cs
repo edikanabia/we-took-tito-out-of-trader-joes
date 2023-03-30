@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System;
+using UnityEngine.Assertions.Must;
 
 public class GameManager : MonoBehaviour
 {
@@ -32,14 +33,32 @@ public class GameManager : MonoBehaviour
 
     public int currentLine = 0;
 
+    string dailyRecommendation;
+    DateTime dateCheck = DateTime.Today;
+    
 
     public KeyCode advanceText;
+
+    public int groceryThreshold = 3;
 
     //lists
     [SerializeField] List<GameObject> slots;
     public List<GameObject> groundItems;
     public List<Image> slotImages;
     public List<Items> itemSlots; //every item script on the image slots
+
+    public enum Speakers
+    {
+        Tito,
+        Oliver,
+        Terry,
+        Rose,
+        Jeanne,
+        TraitorJoe
+    }
+
+    public List<Sprite> characterPortraits;
+
 
     //Tito's information
     PlayerController tito;
@@ -53,22 +72,59 @@ public class GameManager : MonoBehaviour
         dialogue = GameObject.Find("dialogue").GetComponent<TMP_Text>();
         tito = GameObject.Find("Player").GetComponent<PlayerController>();
 
-        for (int i = 1; i < 5; i++)
+        switch (dateCheck.DayOfWeek)
         {
-            slots.Add(GameObject.Find("Slot" + i));
-            
+            case DayOfWeek.Monday:
+                dailyRecommendation = "orange juice";
+                break;
+
+            case DayOfWeek.Tuesday:
+                dailyRecommendation = "grapes";
+                break;
+
+            case DayOfWeek.Wednesday:
+                dailyRecommendation = "Extra Butter!";
+                break;
+
+            case DayOfWeek.Thursday:
+                dailyRecommendation = "chocolate hazelnut spread";
+                break;
+
+            case DayOfWeek.Friday:
+                dailyRecommendation = "fruit punch";
+                break;
+
+            case DayOfWeek.Saturday:
+                dailyRecommendation = "cookie---any of them, really";
+                break;
+
+            case DayOfWeek.Sunday:
+                dailyRecommendation = "kielbasa";
+                break;
+
+            default:
+                dailyRecommendation = "ERM, WHAT THE SPRUCE?";
+                break;
+
         }
 
-        for (int i = 0; i < 4; i++)
+
+
+        for (int i = maxInventory + 1 -maxInventory; i < maxInventory + 1; i++)
+        {
+            slots.Add(GameObject.Find("Slot" + i));
+        }
+
+        for (int i = 0; i < maxInventory; i++)
         {
             slotImages.Add(slots[i].GetComponent<Image>());
         }
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < maxInventory; i++)
         {
             slotImages[i].enabled = false;
         }
 
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < maxInventory; i++)
         {
             itemSlots.Add(slots[i].GetComponent<Items>());
         }
@@ -83,31 +139,58 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
+
         if (gameEnd)
         {
-            if (Input.GetKeyDown(KeyCode.R))
-            {
-                SceneManager.LoadScene(0);
-            }
+            //if (Input.GetKeyDown(KeyCode.R))
+            //{
+            //    SceneManager.LoadScene(0);
+            //}
         }
-        else
+        else 
         {
 
-            if (speaking)
+            if (speaking) //handles displaying of dialogue box
             {
                 nametag.text = nameList[currentLine];
                 dialogue.text = linesList[currentLine];
-                if(GameObject.Find(nametag.text).GetComponent<SpeakerScript>().speakerPortrait == null)
+                
+                switch (nametag.text)
                 {
-                    portrait.sprite = null;
-                }
-                else
-                {
-                    portrait.sprite = GameObject.Find(nametag.text).GetComponent<SpeakerScript>().speakerPortrait;
+                    case "Tito":
+                        portrait.enabled = true;
+                        portrait.sprite = characterPortraits[(int)Speakers.Tito];
+                        break;
+                    case "Terry":
+                        portrait.enabled = true;
+                        portrait.sprite = characterPortraits[(int)Speakers.Terry];
+                        break;
+                    case "Jeanne":
+                        portrait.enabled = true;
+                        portrait.sprite = characterPortraits[(int)Speakers.Jeanne];
+                        break;
+                    case "Oliver":
+                        portrait.enabled = true;
+                        portrait.sprite = characterPortraits[(int)Speakers.Oliver];
+                        break;
+                    case "Rose":
+                        portrait.enabled = true;
+                        portrait.sprite = characterPortraits[(int)Speakers.Rose];
+                        break;
+                    case "Traitor Joe":
+                        portrait.enabled = true;
+                        portrait.sprite = characterPortraits[(int)Speakers.TraitorJoe];
+                        break;
+                    default:
+                        portrait.sprite = null;
+                        portrait.enabled = false;
+                        break;
                 }
                 
                 if (Input.GetKeyDown(advanceText))
                 {
+                    //advances the text if there's extra text, otherwise, it resets.
                     if (currentLine < nameList.Count-1 || currentLine < linesList.Count-1)
                     {
                         currentLine++;
@@ -207,10 +290,22 @@ public class GameManager : MonoBehaviour
 
         foreach(string line in allLines)
         {
-            string[] splitHolder = line.Split('|');
-            nameList.Add(splitHolder[0]);
-            linesList.Add(splitHolder[splitHolder.Length - 1]);
-
+            if (line.Contains("<dailyRecommendation>"))
+            {
+                string thisLine = line.Replace("<dailyRecommendation>", dailyRecommendation);
+                string[] splitHolder = thisLine.Split('|');
+                nameList.Add(splitHolder[0]);
+                linesList.Add(splitHolder[splitHolder.Length - 1]);
+                Debug.Log(dailyRecommendation);
+            }
+            else
+            {
+                string[] splitHolder = line.Split('|');
+                nameList.Add(splitHolder[0]);
+                linesList.Add(splitHolder[splitHolder.Length - 1]);
+            }
+            
+            
         }
 
         speaking = true;        

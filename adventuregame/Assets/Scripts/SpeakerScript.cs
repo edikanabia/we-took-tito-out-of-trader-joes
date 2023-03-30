@@ -11,7 +11,7 @@ public class SpeakerScript : MonoBehaviour
 
     public Sprite speakerPortrait;
     public string speakerName;
-    public int scenarioNumber;
+    public int speakerState = 0;
 
     GameManager gameManager;
     PlayerController tito;
@@ -43,7 +43,7 @@ public class SpeakerScript : MonoBehaviour
         if (firstTimeSpeaking)
         {
             firstTimeSpeaking = false;
-            
+            speakerState++;
         }
     }
 }
