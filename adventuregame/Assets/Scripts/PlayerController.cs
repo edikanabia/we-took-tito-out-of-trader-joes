@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using UnityEngine.Experimental.GlobalIllumination;
+using UnityEngine.SceneManagement;
+using System.Globalization;
 
 public class PlayerController : MonoBehaviour
 {
@@ -15,10 +16,14 @@ public class PlayerController : MonoBehaviour
     //public int itemsCount = 0;
 
     public GameManager gameManager;
+    public DialogueCaller caller;
+    int nextSceneIndex;
 
 
     //can he finish the game?!?!?
     public bool isReadyToCheckout = false;
+    public string speakerName;
+    public int npcSpeakingCount;
 
     //movement variables
     public float playerSpeed;
@@ -35,6 +40,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         _previousPosition = playerRB.position;
+        caller = GameObject.Find("DialogueCaller").GetComponent<DialogueCaller>();
         //dialogue.enabled = false;
         //gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         
@@ -43,11 +49,11 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-        
 
         if (!gameManager.gameEnd)
         {
+            nextSceneIndex = SceneManager.GetActiveScene().buildIndex +1;
+
             if (gameManager.speaking)
             {
                 _movement.x = 0;
@@ -68,6 +74,12 @@ public class PlayerController : MonoBehaviour
             {
                 isReadyToCheckout = false;
             }
+
+
+            
+
+
+
         }
 
     }
@@ -159,30 +171,41 @@ public class PlayerController : MonoBehaviour
 
             }
         }
-
-        if (isReadyToCheckout)
-        {
-
-        }
         
     }
 
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        
         if (collision.gameObject.CompareTag("Speaker"))
         {
-
-            string speakername = "rosetest";
-            gameManager.speaking = true;
-            gameManager.DialogueBox(speakername);
+            speakerName = collision.gameObject.name;
+            gameManager.DialogueBox(caller.UpdateDialogue());
         }
-        
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        //if speaking is true + you're supposed to switch once the text is done,
+        //do not switch until after speaking  is false
+        if (caller.SwitchNow())
+        {
+            if (!gameManager.speaking)
+            {
+                caller.ChangeScene(nextSceneIndex);
+            }
+        }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        gameManager.dialogueBoxObj.SetActive(false);
+        if(collision.gameObject.tag == "Speaker")
+        {
+            npcSpeakingCount = collision.gameObject.GetComponent<SpeakerScript>().timesSpokenTo;
+            gameManager.dialogueBoxObj.SetActive(false);
+        }
+        
     }
 
 
