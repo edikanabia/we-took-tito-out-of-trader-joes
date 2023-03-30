@@ -38,6 +38,12 @@ public class SpeakerScript : MonoBehaviour
         
     }
 
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        timesSpokenTo++;
+    }
+
     private void OnCollisionExit2D(Collision2D collision)
     {
         if (firstTimeSpeaking)
@@ -45,6 +51,6 @@ public class SpeakerScript : MonoBehaviour
             firstTimeSpeaking = false;
         }
 
-        timesSpokenTo++;
+        
     }
 }

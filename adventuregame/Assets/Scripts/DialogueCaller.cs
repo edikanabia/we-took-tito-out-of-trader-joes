@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -11,6 +10,7 @@ public class DialogueCaller : MonoBehaviour
     int currentSceneIndex;
     int sceneFrameCount = 0;
     string currentFilename;
+    string theLastThingRoseSaid;
     GameManager gameManager;
     PlayerController tito;
 
@@ -52,7 +52,7 @@ public class DialogueCaller : MonoBehaviour
                 switch (tito.speakerName)
                 {
                     case "Oliver":
-                        currentFilename = "oliver3";
+                        currentFilename = "oliver2";
                         break;
                     case "Rose":
                         currentFilename = "rose2";
@@ -121,7 +121,57 @@ public class DialogueCaller : MonoBehaviour
             //tito has the right items scenarios
             if (tito.isReadyToCheckout)
             {
+                switch (tito.speakerName)
+                {
+                    case "Oliver":
+                        currentFilename = "oliver4";
+                        break;
+                    case "Rose":
+                        if (tito.npcSpeakingCount == 0)
+                        {
+                            currentFilename = "rose3";
 
+                        }
+                        else if (tito.npcSpeakingCount >= 6)
+                        {
+                            currentFilename = "rose5"; //rose explanation
+                        }
+                        else if (tito.npcSpeakingCount > 0 && tito.npcSpeakingCount < 6)
+                        {
+                            switch (gameManager.titoItems[0])
+                            {
+                                case "key club key":
+                                    currentFilename = "key club key";
+
+                                    break;
+                                case "blue key":
+                                    currentFilename = "blue key";
+                                    break;
+                                case "bent key":
+                                    currentFilename = "bent key";
+                                    break;
+                                case "keyblade":
+                                    currentFilename = "keyblade";
+                                    break;
+                                case "key west":
+                                    currentFilename = "key west";
+                                    break;
+                                case "um key":
+                                    currentFilename = "um key";
+                                    break;
+                                case "key lime pie":
+                                    currentFilename = "key lime pie";
+                                    break;
+
+                            }
+
+                        }
+                        
+                        break;
+                    case "Jeanne":
+                        currentFilename = "jeanne2";
+                        break;
+                }
             }
             else
             {
@@ -131,11 +181,22 @@ public class DialogueCaller : MonoBehaviour
                     switch (tito.speakerName)
                     {
                         case "Oliver":
-                            currentFilename = "oliver0";
+                            currentFilename = "oliver3";
                             break;
                         case "Rose":
+                            if(tito.npcSpeakingCount == 0)
+                            {
+                                currentFilename = "rose3";
+                                
+                            }
+                            else
+                            {
+                                currentFilename = "rose4";
+                                
+                            }
                             break;
                         case "Jeanne":
+                            currentFilename = "jeanne1";
                             break;
                     }
                 }
@@ -147,21 +208,47 @@ public class DialogueCaller : MonoBehaviour
                         case "Rose":
                             if (tito.npcSpeakingCount >= 6)
                             {
-                                currentFilename = ""; //rose explanation
+                                currentFilename = "rose5"; //rose explanation
                             }
+
                             else
                             {
-                                //rose comments on every object
+                                //rose describes the first item in your inventory
                                 switch (gameManager.titoItems[0])
                                 {
-                                    case "key lime pie":
+                                    case "key club key":
+                                        currentFilename = "key club key";
+                                        
                                         break;
+                                    case "blue key":
+                                        currentFilename = "blue key";
+                                        break;
+                                    case "bent key":
+                                        currentFilename = "bent key";
+                                        break;
+                                    case "keyblade":
+                                        currentFilename = "keyblade";
+                                        break;
+                                    case "key west":
+                                        currentFilename = "key west";
+                                        break;
+                                    case "um key":
+                                        currentFilename = "um key";
+                                        break;
+                                    case "key lime pie":
+                                        currentFilename = "key lime pie";
+                                        break;
+
                                 }
+                                
                             }
                             break;
                         case "Jeanne":
+                            currentFilename = "jeanne1";
                             break;
+
                         case "Oliver":
+                            currentFilename = "oliver3";
                             break;
                     }
                     
@@ -213,7 +300,9 @@ public class DialogueCaller : MonoBehaviour
     {
         switch (UpdateDialogue())
         {
-            case "oliver3": //any of the scene ending oliver or joe scripts
+            case "oliver2": //any of the scene ending oliver or joe scripts
+                return true;
+            case "oliver4":
                 return true;
             default:
                 return false;

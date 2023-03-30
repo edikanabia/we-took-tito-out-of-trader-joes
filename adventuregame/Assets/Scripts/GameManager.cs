@@ -5,7 +5,6 @@ using TMPro;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System;
-using UnityEngine.Assertions.Must;
 
 public class GameManager : MonoBehaviour
 {
@@ -283,7 +282,7 @@ public class GameManager : MonoBehaviour
         
         itemSlots[itemsCount - 1].itemName = null; //blanks out name
         slotImages[itemsCount - 1].enabled = false; //empties last slot
-        titoItems.RemoveAt(titoItems.Count - 1);
+        titoItems.RemoveAt(itemIndex); //removes at item index
 
         itemsCount--;
 
