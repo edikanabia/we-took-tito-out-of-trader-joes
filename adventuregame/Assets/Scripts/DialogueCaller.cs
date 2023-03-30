@@ -23,25 +23,21 @@ public class DialogueCaller : MonoBehaviour
 
         currentFilename = "opening" + currentSceneIndex;
         Debug.Log(currentFilename);
-
+        sceneFrameCount = 0;
     }
 
     private void Update()
     {
-        sceneFrameCount += Time.frameCount;
+        sceneFrameCount += 1;
         if (sceneFrameCount == 1)
         {
             gameManager.DialogueBox(currentFilename);
-            
         }
-        else
-        {
-
-        }
+        
     }
 
     public void ChangeScene(int index)
-    {
+    {        
         SceneManager.LoadScene(index);
         currentSceneIndex = index;
         sceneFrameCount = 0;
@@ -57,6 +53,15 @@ public class DialogueCaller : MonoBehaviour
                 {
                     case "Oliver":
                         currentFilename = "oliver3";
+                        break;
+                    case "Rose":
+                        currentFilename = "rose2";
+                        break;
+                    case "Terry":
+                        currentFilename = "terry3";
+                        break;
+                    case "Jeanne":
+                        currentFilename = "jeanne0";
                         break;
                 }
             }
@@ -92,7 +97,21 @@ public class DialogueCaller : MonoBehaviour
                 //tito doesn't have the right items scenario
                 else if (gameManager.titoItems.Count > 0 && gameManager.groceries < gameManager.groceryThreshold)
                 {
-
+                    switch (tito.speakerName)
+                    {
+                        case "Oliver":
+                            currentFilename = "oliver1";
+                            break;
+                        case "Rose":
+                            currentFilename = "rose1";
+                            break;
+                        case "Terry":
+                            currentFilename = "terry2";
+                            break;
+                        case "Jeanne":
+                            currentFilename = "jeanne0";
+                            break;
+                    }
                 }
             }
         }

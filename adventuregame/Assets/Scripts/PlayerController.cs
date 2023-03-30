@@ -182,6 +182,7 @@ public class PlayerController : MonoBehaviour
         {
             speakerName = collision.gameObject.name;
             gameManager.DialogueBox(caller.UpdateDialogue());
+            
         }
     }
 
@@ -189,13 +190,7 @@ public class PlayerController : MonoBehaviour
     {
         //if speaking is true + you're supposed to switch once the text is done,
         //do not switch until after speaking  is false
-        if (caller.SwitchNow())
-        {
-            if (!gameManager.speaking)
-            {
-                caller.ChangeScene(nextSceneIndex);
-            }
-        }
+        
     }
 
     private void OnCollisionExit2D(Collision2D collision)

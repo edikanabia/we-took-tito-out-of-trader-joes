@@ -35,8 +35,8 @@ public class GameManager : MonoBehaviour
 
     string dailyRecommendation;
     DateTime dateCheck = DateTime.Today;
-    
 
+    DialogueCaller switcher;
     public KeyCode advanceText;
 
     public int groceryThreshold = 3;
@@ -71,6 +71,7 @@ public class GameManager : MonoBehaviour
         //shoppingList = GameObject.Find("shopping list").GetComponent<TMP_Text>();
         dialogue = GameObject.Find("dialogue").GetComponent<TMP_Text>();
         tito = GameObject.Find("Player").GetComponent<PlayerController>();
+        switcher = GameObject.Find("DialogueCaller").GetComponent<DialogueCaller>();
 
         switch (dateCheck.DayOfWeek)
         {
@@ -204,6 +205,13 @@ public class GameManager : MonoBehaviour
                         currentLine = 0;
                         nameList.RemoveRange(0, nameList.Count);
                         linesList.RemoveRange(0, linesList.Count);
+
+                        if (switcher.SwitchNow())
+                        {
+                            speaking = false;
+                            switcher.ChangeScene(SceneManager.GetActiveScene().buildIndex + 1);
+                        }
+
                     }
                 }
             }
