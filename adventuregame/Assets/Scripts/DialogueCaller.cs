@@ -262,34 +262,43 @@ public class DialogueCaller : MonoBehaviour
             //tito has the right items scenarios
             if (tito.isReadyToCheckout)
             {
-
+                switch (tito.speakerName)
+                {
+                    case "Jeanne":
+                        currentFilename = "ghost trick";
+                        break;
+                    case "Traitor Joe":
+                        currentFilename = "game win";
+                        break;
+                }
             }
             else
             {
-                //tito has no items
-                if (gameManager.titoItems.Count == 0)
+                if(gameManager.titoItems.Count == 0)
                 {
-
-                }
-                //tito has items but not the right ones
-                else if (gameManager.titoItems.Count > 0 && gameManager.groceries < gameManager.groceryThreshold)
-                {
-                    if (tito.speakerName == "Rose")
+                    switch (tito.speakerName)
                     {
-                        if (tito.npcSpeakingCount >= 6)
-                        {
-                            currentFilename = ""; //rose explanation
-                        }
-                    }
-                    //rose comments on every object
-                    switch (gameManager.titoItems[0])
-                    {
-                        case "key lime pie":
-                            currentFilename = "";
+                        case "Jeanne":
+                            currentFilename = "jeanne3";
                             break;
-                            
+                        case "Traitor Joe":
+                            currentFilename = "traitorjoe0";
+                            break;
                     }
                 }
+                else
+                {
+                    switch (tito.speakerName)
+                    {
+                        case "Jeanne":
+                            currentFilename = gameManager.titoItems[0];
+                            break;
+                        case "Traitor Joe":
+                            currentFilename = "game lose";
+                            break;
+                    }
+                }
+                
             }
         }
 
@@ -303,6 +312,10 @@ public class DialogueCaller : MonoBehaviour
             case "oliver2": //any of the scene ending oliver or joe scripts
                 return true;
             case "oliver4":
+                return true;
+            case "game win":
+                return true;
+            case "game lose":
                 return true;
             default:
                 return false;
